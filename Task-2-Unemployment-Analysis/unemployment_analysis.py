@@ -1,86 +1,86 @@
+# =========================================
 # TASK 2: Unemployment Analysis with Python
-# CodeAlpha Data Science Internship
+# Using Pre-COVID and COVID Datasets
+# =========================================
 
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
 # -------------------------------
-# 1. Load Dataset
+# 1. Load Datasets
 # -------------------------------
-# Make sure the dataset file name matches exactly
-df = pd.read_csv("unemployment_data.csv")
-
-print("First 5 rows of dataset:")
-print(df.head())
-
-print("\nDataset Information:")
-print(df.info())
+pre_covid = pd.read_csv("unemployment_pre_covid.csv")
+covid = pd.read_csv("unemployment_covid.csv")
 
 # -------------------------------
-# 2. Data Cleaning
+# 2. Standardize Column Names
 # -------------------------------
-# Clean column names
-df.columns = df.columns.str.strip().str.lower().str.replace(" ", "_")
+pre_covid.columns = pre_covid.columns.str.strip().str.lower()
+covid.columns = covid.columns.str.strip().str.lower()
 
-# Handle missing values
-df.fillna(method='ffill', inplace=True)
-
-# Convert date column to datetime
-# (Assuming first column is Date)
-df.iloc[:, 0] = pd.to_datetime(df.iloc[:, 0])
-
-# Rename columns for clarity (if needed)
-df.rename(columns={
-    df.columns[0]: "date",
-    df.columns[1]: "unemployment_rate"
-}, inplace=True)
+# Expected columns: date, unemployment_rate
+pre_covid['period'] = 'Pre-COVID'
+covid['period'] = 'COVID'
 
 # -------------------------------
-# 3. Exploratory Data Analysis
+# 3. Convert Date Column
 # -------------------------------
-print("\nSummary Statistics:")
-print(df.describe())
+pre_covid['date'] = pd.to_datetime(pre_covid['date'])
+covid['date'] = pd.to_datetime(covid['date'])
 
 # -------------------------------
-# 4. Visualization: Unemployment Trend
+# 4. Merge Datasets
 # -------------------------------
-plt.figure(figsize=(10,5))
-sns.lineplot(x="date", y="unemployment_rate", data=df)
-plt.title("Unemployment Rate Trend Over Time")
+df = pd.concat([pre_covid, covid], ignore_index=True)
+
+# -------------------------------
+# 5. Data Cleaning
+# -------------------------------
+df.dropna(inplace=True)
+
+# -------------------------------
+# 6. Overall Trend Visualization
+# -------------------------------
+plt.figure(figsize=(12, 6))
+sns.lineplot(data=df, x='date', y='unemployment_rate', hue='period')
+plt.title("Unemployment Rate Trend (Pre-COVID vs COVID)")
 plt.xlabel("Year")
 plt.ylabel("Unemployment Rate (%)")
+plt.tight_layout()
 plt.show()
 
 # -------------------------------
-# 5. COVID-19 Impact Analysis
+# 7. COVID Impact Comparison
 # -------------------------------
-covid_data = df[df["date"].dt.year >= 2020]
+avg_rates = df.groupby('period')['unemployment_rate'].mean()
 
-plt.figure(figsize=(10,5))
-sns.lineplot(x="date", y="unemployment_rate", data=covid_data, color="red")
-plt.title("Impact of COVID-19 on Unemployment Rate")
-plt.xlabel("Year")
+plt.figure(figsize=(6, 4))
+avg_rates.plot(kind='bar', color=['green', 'red'])
+plt.title("Average Unemployment Rate Comparison")
 plt.ylabel("Unemployment Rate (%)")
+plt.xticks(rotation=0)
+plt.tight_layout()
 plt.show()
 
 # -------------------------------
-# 6. Seasonal / Monthly Pattern
+# 8. Seasonal Trend Analysis
 # -------------------------------
-df["month"] = df["date"].dt.month
+df['month'] = df['date'].dt.month
 
-plt.figure(figsize=(10,5))
-sns.boxplot(x="month", y="unemployment_rate", data=df)
-plt.title("Seasonal Pattern in Unemployment Rate")
+plt.figure(figsize=(10, 5))
+sns.boxplot(data=df, x='month', y='unemployment_rate')
+plt.title("Monthly Seasonal Trend in Unemployment")
 plt.xlabel("Month")
 plt.ylabel("Unemployment Rate (%)")
+plt.tight_layout()
 plt.show()
 
 # -------------------------------
-# 7. Key Insights
+# 9. Key Insights
 # -------------------------------
-print("\nKey Insights:")
-print("1. Unemployment rate increased sharply during the COVID-19 period (2020).")
-print("2. Certain months show consistent seasonal unemployment patterns.")
-print("3. Post-COVID recovery is visible but gradual.")
-print("4. Data highlights the need for economic support during crisis periods.")
+print("\n📊 KEY INSIGHTS:")
+print("1. Unemployment rate increased significantly during COVID period.")
+print("2. Higher volatility is observed during COVID months.")
+print("3. Certain months show seasonal spikes in unemployment.")
+print("4. Results can help policymakers plan employment support programs.")
