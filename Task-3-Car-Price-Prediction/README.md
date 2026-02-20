@@ -1,19 +1,18 @@
-# 🚗 Car Price Prediction using Machine Learning
+# TASK 3: Car Price Prediction with Machine Learning
 
-## 📌 Project Overview
-This project predicts the selling price of cars based on various features such as
-present price, kilometers driven, fuel type, transmission, and ownership history.
-Completed as part of the CodeAlpha Internship.
+## Objective
+To predict car prices using machine learning based on features such as horsepower,
+mileage, engine size, and other car-related attributes.
 
-## 📂 Dataset
-The dataset includes 301 car records with attributes like:
-- Present Price
-- Driven Kilometers
-- Fuel Type
-- Transmission
-- Owner Count
+## Steps Performed
+- Data loading and cleaning
+- Feature selection and preprocessing
+- Train-test split
+- Regression model training
+- Model evaluation
+- Visualization and insights
 
-## ⚙️ Technologies Used
+## Tools Used
 - Python
 - Pandas
 - NumPy
@@ -21,15 +20,6 @@ The dataset includes 301 car records with attributes like:
 - Seaborn
 - Scikit-learn
 
-## 🤖 Machine Learning Model
-- Linear Regression
-
-## 📈 Results & Insights
-- Present price has the highest impact on selling price
-- Newer cars have higher resale value
-- Automatic and diesel cars are priced higher
-- Model achieved ~88% accuracy (R² score)
-
-## 👨‍💻 Author
-Piyush Sahu
-CodeAlpha Intern
+## Outcome
+The project demonstrates how machine learning can be applied to real-world car
+price prediction problems and assist buyers, sellers, and dealerships.
